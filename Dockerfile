@@ -11,3 +11,6 @@ RUN apk add ffmpeg php
 RUN apk add --update python3 py3-pip
 # Volta para o user node
 USER node
+
+# Definir o diretório de trabalho
+WORKDIR /data
