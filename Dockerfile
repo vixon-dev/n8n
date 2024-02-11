@@ -11,7 +11,7 @@ RUN apk add ffmpeg php python3 py3-pip
 RUN npm install -g ytdl-core
 
 # Permite usar ytdl-core e outras bibliotecas nos Function Nodes
-ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,axios,lodash,moment,jimp,csv-parser,fs
+ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core
 
 # Define variáveis de ambiente necessárias
 ENV NODE_PATH=/usr/local/lib/node_modules
