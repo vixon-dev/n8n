@@ -1,5 +1,5 @@
 # Usar a imagem oficial do n8n como base
-FROM n8nio/n8n:v1.40.0
+FROM n8nio/n8n
 
 # Altera para root para instalar as dependências
 USER root
