@@ -1,14 +1,14 @@
-# Usar a imagem oficial do n8n como base
-FROM n8nio/n8n
+# Usar a imagem oficial do n8n como base com a tag `latest`
+FROM n8nio/n8n:latest
 
 # Altera para root para instalar as dependências
 USER root
 
-# Instalar FFMPEG, PHP, e Python
-RUN apk add ffmpeg php python3 py3-pip
+# Atualiza os índices dos pacotes e instala FFMPEG, PHP, e Python
+RUN apk update && apk add ffmpeg php python3 py3-pip
 
-# Instalar YTDL
-RUN npm install -g ytdl-core
+# Instala a versão mais recente do ytdl-core
+RUN npm install -g ytdl-core@latest
 
 # Permite usar ytdl-core e outras bibliotecas nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core
