@@ -1,5 +1,5 @@
 # Usar a imagem oficial do n8n como base com a tag `latest`
-FROM n8nio/n8n:latest
+FROM n8nio/n8n:next
 
 # Altera para root para instalar as dependências
 USER root
