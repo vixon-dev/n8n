@@ -10,8 +10,12 @@ RUN apk update && apk add ffmpeg php python3 py3-pip
 # Instala a versão mais recente do ytdl-core
 RUN npm install -g ytdl-core@latest
 
+# Instala a versão mais recente do yt-dlp
+RUN python3 -m pip install -U "yt-dlp[default]"
+
 # Permite usar ytdl-core e outras bibliotecas nos Function Nodes
-ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core
+ENV NODE_FUNCTION_ALLOW_BUILTIN=*
+ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp
 
 # Define variáveis de ambiente necessárias
 ENV NODE_PATH=/usr/local/lib/node_modules
