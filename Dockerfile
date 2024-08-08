@@ -7,11 +7,15 @@ USER root
 # Atualiza os índices dos pacotes e instala FFMPEG, PHP, e Python
 RUN apk update && apk add ffmpeg php python3 py3-pip
 
+# Cria um ambiente virtual e ativa-o
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Instala a versão mais recente do yt-dlp dentro do ambiente virtual
+RUN pip install -U "yt-dlp[default]"
+
 # Instala a versão mais recente do ytdl-core
 RUN npm install -g ytdl-core@latest
-
-# Instala a versão mais recente do yt-dlp
-RUN python3 -m pip install -U "yt-dlp[default]"
 
 # Permite usar ytdl-core e outras bibliotecas nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
