@@ -16,6 +16,7 @@ RUN pip install -U "yt-dlp[default]"
 
 # Instala a versão mais recente do ytdl-core
 RUN npm install -g ytdl-core@latest
+RUN npm i youtube-transcript
 
 # Permite usar ytdl-core e outras bibliotecas nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
