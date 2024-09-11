@@ -20,7 +20,8 @@ RUN apk update && \
     wqy-zenhei \
     font-noto \
     font-noto-cjk \
-    git
+    git \
+    nano
 
 # Instalar Puppeteer, Lighthouse, Axios e URL globalmente
 RUN npm install -g puppeteer \
