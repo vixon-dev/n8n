@@ -1,7 +1,7 @@
-const puppeteer = require('puppeteer');
-const lighthouse = require('lighthouse');
-const { URL } = require('url');
-const axios = require('axios');
+import puppeteer from 'puppeteer';
+import { lighthouse } from 'lighthouse';
+import { URL } from 'url';
+import axios from 'axios';
 
 // Função principal para rodar o Lighthouse
 async function runLighthouse(url) {
@@ -28,14 +28,10 @@ if (!url) {
   process.exit(1);
 }
 
-// URL do webhook do N8N para enviar os resultados
+// URL do webhook do N8N para enviar os resultados, opcional
 const webhookUrl = process.argv[3];
-if (!webhookUrl) {
-  console.error("Por favor, forneça o Webhook do N8N.");
-  process.exit(1);
-}
 
-// Executa o Lighthouse e envia o relatório para o Webhook
+// Executa o Lighthouse e trata o relatório
 runLighthouse(url).then(report => {
   const data = {
     performance: report.categories.performance.score,
@@ -45,14 +41,20 @@ runLighthouse(url).then(report => {
     pwa: report.categories.pwa.score
   };
 
-  // Envia os resultados para o webhook do N8N
-  axios.post(webhookUrl, data)
-    .then(response => {
-      console.log('Relatório enviado com sucesso:', response.data);
-    })
-    .catch(error => {
-      console.error('Erro ao enviar os dados:', error);
-    });
+  // Se a URL do webhook foi fornecida, envia o resultado para o Webhook
+  if (webhookUrl) {
+    axios.post(webhookUrl, data)
+      .then(response => {
+        console.log('Relatório enviado com sucesso:', response.data);
+      })
+      .catch(error => {
+        console.error('Erro ao enviar os dados:', error);
+      });
+  } else {
+    // Se não houver webhook, imprime o JSON no console
+    console.log(JSON.stringify(data, null, 2));
+  }
+
 }).catch(error => {
   console.error('Erro ao executar o Lighthouse:', error);
 });
