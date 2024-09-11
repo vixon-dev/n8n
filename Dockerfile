@@ -19,11 +19,14 @@ RUN apk update && \
     ttf-freefont \
     wqy-zenhei \
     font-noto \
-    font-noto-cjk
+    font-noto-cjk \
+    git
 
-# Instalar Puppeteer e Lighthouse globalmente
+# Instalar Puppeteer, Lighthouse, Axios e URL globalmente
 RUN npm install -g puppeteer \
-    && npm install -g lighthouse
+    && npm install -g lighthouse \
+    && npm install -g axios \
+    && npm install -g url
 
 # Cria um ambiente virtual e ativa-o
 RUN python3 -m venv /opt/venv
@@ -36,9 +39,15 @@ RUN pip install -U "yt-dlp[default]"
 RUN npm install -g ytdl-core@latest
 RUN npm i youtube-transcript
 
-# Permite usar ytdl-core, puppeteer, lighthouse e outras bibliotecas nos Function Nodes
+# Baixa o script lighthouse-runner.js do GitHub e salva em /data/scripts/
+RUN mkdir -p /data/scripts && \
+    git clone https://github.com/vixon-dev/n8n.git /tmp/n8n && \
+    cp /tmp/n8n/scripts/lighthouse-runner.js /data/scripts/lighthouse-runner.js && \
+    rm -rf /tmp/n8n
+
+# Permite usar ytdl-core, puppeteer, lighthouse, axios e outras bibliotecas nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
-ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse
+ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url
 
 # Define variáveis de ambiente necessárias
 ENV NODE_PATH=/usr/local/lib/node_modules
