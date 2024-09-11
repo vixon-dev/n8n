@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Diretório onde os scripts .js estão armazenados no servidor
 SCRIPTS_DIR="/data/scripts"
