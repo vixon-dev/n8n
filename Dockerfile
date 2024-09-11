@@ -39,10 +39,12 @@ RUN pip install -U "yt-dlp[default]"
 RUN npm install -g ytdl-core@latest
 RUN npm i youtube-transcript
 
-# Baixa o script lighthouse-runner.js do GitHub e salva em /data/scripts/
+# Baixa o script lighthouse-runner.js e update-scripts.sh do GitHub e salva em /data/scripts/
 RUN mkdir -p /data/scripts && \
     git clone https://github.com/vixon-dev/n8n.git /tmp/n8n && \
     cp /tmp/n8n/scripts/lighthouse-runner.js /data/scripts/lighthouse-runner.js && \
+    cp /tmp/n8n/scripts/update-scripts.sh /data/scripts/update-scripts.sh && \
+    chmod +x /data/scripts/update-scripts.sh && \
     rm -rf /tmp/n8n
 
 # Permite usar ytdl-core, puppeteer, lighthouse, axios e outras bibliotecas nos Function Nodes
