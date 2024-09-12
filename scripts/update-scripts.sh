@@ -16,7 +16,7 @@ rm -rf "$TMP_DIR"
 git clone "$REPO_URL" "$TMP_DIR"
 
 # Copia os arquivos .js do repositório para o diretório /data/scripts
-cp "$TMP_DIR/scripts/"*.js "$SCRIPTS_DIR"
+cp "$TMP_DIR/scripts/"*.mjs "$SCRIPTS_DIR"
 
 # Limpa o diretório temporário
 rm -rf "$TMP_DIR"
