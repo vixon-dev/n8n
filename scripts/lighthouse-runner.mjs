@@ -1,7 +1,7 @@
-const puppeteer = require('puppeteer');
-const lighthouse = require('lighthouse');
-const { URL } = require('url');
-const axios = require('axios');
+import puppeteer from 'puppeteer';
+import lighthouse from 'lighthouse';
+import { URL } from 'url';
+import axios from 'axios';
 
 // Função principal para rodar o Lighthouse
 async function runLighthouse(url) {
@@ -42,19 +42,4 @@ runLighthouse(url).then(report => {
   };
 
   // Se a URL do webhook foi fornecida, envia o resultado para o Webhook
-  if (webhookUrl) {
-    axios.post(webhookUrl, data)
-      .then(response => {
-        console.log('Relatório enviado com sucesso:', response.data);
-      })
-      .catch(error => {
-        console.error('Erro ao enviar os dados:', error);
-      });
-  } else {
-    // Se não houver webhook, imprime o JSON no console
-    console.log(JSON.stringify(data, null, 2));
-  }
-
-}).catch(error => {
-  console.error('Erro ao executar o Lighthouse:', error);
-});
+  if (
