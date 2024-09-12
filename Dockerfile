@@ -23,11 +23,8 @@ RUN apk update && \
     git \
     nano
 
-# Instalar Puppeteer, Lighthouse, Axios e URL globalmente, sem baixar o Chromium
-RUN PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install -g puppeteer \
-    && npm install -g lighthouse \
-    && npm install -g axios \
-    && npm install -g url
+# Instala o Puppeteer, Lighthouse, Axios e outros pacotes diretamente no diretório /data
+RUN npm install puppeteer lighthouse axios url --prefix /data
 
 # Cria um ambiente virtual e ativa-o
 RUN python3 -m venv /opt/venv
@@ -38,9 +35,9 @@ RUN pip install -U "yt-dlp[default]"
 
 # Instala a versão mais recente do ytdl-core
 RUN npm install -g ytdl-core@latest
-RUN npm i youtube-transcript
+RUN npm install youtube-transcript --prefix /data
 
-# Baixa o script lighthouse-runner.js e update-scripts.sh do GitHub e salva em /data/scripts/
+# Baixa os scripts lighthouse-runner.mjs e update-scripts.sh do GitHub e salva em /data/scripts/
 RUN mkdir -p /data/scripts && \
     git clone https://github.com/vixon-dev/n8n.git /tmp/n8n && \
     cp /tmp/n8n/scripts/lighthouse-runner.mjs /data/scripts/lighthouse-runner.mjs && \
@@ -56,8 +53,8 @@ RUN chown -R root:node /data/scripts && \
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
 ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url
 
-# Define variáveis de ambiente necessárias
-ENV NODE_PATH=/usr/local/lib/node_modules
+# Define variáveis de ambiente necessárias para que o Node.js saiba onde encontrar os módulos instalados
+ENV NODE_PATH=/data/node_modules
 
 # Volta para o user node
 USER node
