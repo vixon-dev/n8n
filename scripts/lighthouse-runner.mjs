@@ -35,11 +35,11 @@ const webhookUrl = process.argv[3];
 // Executa o Lighthouse e trata o relatório
 runLighthouse(url).then(report => {
   const data = {
-    performance: report.categories.performance.score,
-    accessibility: report.categories.accessibility.score,
-    bestPractices: report.categories['best-practices'].score,
-    seo: report.categories.seo.score,
-    pwa: report.categories.pwa.score
+    performance: report.categories?.performance?.score || 'N/A',
+    accessibility: report.categories?.accessibility?.score || 'N/A',
+    bestPractices: report.categories?.['best-practices']?.score || 'N/A',
+    seo: report.categories?.seo?.score || 'N/A',
+    pwa: report.categories?.pwa?.score || 'N/A'
   };
 
   // Se a URL do webhook foi fornecida, envia o resultado para o Webhook
