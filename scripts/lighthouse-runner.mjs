@@ -18,7 +18,6 @@ async function runLighthouse(url) {
   });
 
   await browser.close();
-
   return lhr;
 }
 
@@ -34,18 +33,49 @@ const webhookUrl = process.argv[3];
 
 // Executa o Lighthouse e trata o relatório
 runLighthouse(url).then(report => {
-  // Se a URL do webhook foi fornecida, envia o resultado completo para o Webhook
+  const data = {
+    seo: {
+      score: report.categories.seo.score,
+      meta_description: report.audits['meta-description']?.score || 'N/A',
+      http_status: report.audits['is-on-https']?.score || 'N/A',
+      hreflang: report.audits['hreflang']?.score || 'N/A',
+      title_tag: report.audits['document-title']?.score || 'N/A',
+      headings_structure: report.audits['heading-order']?.score || 'N/A',
+      robots_txt: report.audits['robots-txt']?.score || 'N/A',
+      canonical_tag: report.audits['canonical']?.score || 'N/A',
+      structured_data: report.audits['structured-data']?.score || 'N/A'
+    },
+    performance: {
+      score: report.categories.performance.score,
+      first_contentful_paint: report.audits['first-contentful-paint']?.numericValue || 'N/A',
+      largest_contentful_paint: report.audits['largest-contentful-paint']?.numericValue || 'N/A',
+      time_to_interactive: report.audits['interactive']?.numericValue || 'N/A',
+      total_blocking_time: report.audits['total-blocking-time']?.numericValue || 'N/A',
+      cumulative_layout_shift: report.audits['cumulative-layout-shift']?.numericValue || 'N/A',
+      speed_index: report.audits['speed-index']?.numericValue || 'N/A',
+      time_to_first_byte: report.audits['server-response-time']?.numericValue || 'N/A'
+    },
+    best_practices: {
+      score: report.categories['best-practices']?.score || 'N/A',
+      uses_https: report.audits['is-on-https']?.score || 'N/A',
+      vulnerabilities: report.audits['no-vulnerable-libraries']?.score || 'N/A',
+      csp: report.audits['csp-xss']?.score || 'N/A',
+      uses_passive_listeners: report.audits['uses-passive-event-listeners']?.score || 'N/A'
+    }
+  };
+
+  // Enviar via webhook ou imprimir no console
   if (webhookUrl) {
-    axios.post(webhookUrl, report)
+    axios.post(webhookUrl, data)
       .then(response => {
-        console.log('Relatório completo enviado com sucesso:', response.data);
+        console.log('Relatório enviado com sucesso:', response.data);
       })
       .catch(error => {
         console.error('Erro ao enviar os dados:', error);
       });
   } else {
-    // Se não houver webhook, imprime o relatório completo no console
-    console.log(JSON.stringify(report, null, 2));
+    // Se não houver webhook, imprime o JSON no console
+    console.log(JSON.stringify(data, null, 2));
   }
 
 }).catch(error => {
