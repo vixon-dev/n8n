@@ -15,6 +15,11 @@ async function runLighthouse(url) {
     port: new URL(browser.wsEndpoint()).port,
     output: 'json',
     logLevel: 'info',
+    // Focar apenas nas categorias relevantes
+    onlyCategories: ['performance', 'seo', 'best-practices', 'accessibility'], // Incluindo acessibilidade para mobile
+    // Configurações para otimizar o tempo de execução
+    disableStorageReset: true,  // Não limpa o armazenamento local do navegador
+    throttlingMethod: 'provided',  // Usa a configuração de throttling do navegador
   });
 
   await browser.close();
@@ -43,7 +48,8 @@ runLighthouse(url).then(report => {
       headings_structure: report.audits['heading-order']?.score || 'N/A',
       robots_txt: report.audits['robots-txt']?.score || 'N/A',
       canonical_tag: report.audits['canonical']?.score || 'N/A',
-      structured_data: report.audits['structured-data']?.score || 'N/A'
+      structured_data: report.audits['structured-data']?.score || 'N/A',
+      crawlable_links: report.audits['crawlable-anchors']?.score || 'N/A'
     },
     performance: {
       score: report.categories.performance.score,
@@ -53,7 +59,9 @@ runLighthouse(url).then(report => {
       total_blocking_time: report.audits['total-blocking-time']?.numericValue || 'N/A',
       cumulative_layout_shift: report.audits['cumulative-layout-shift']?.numericValue || 'N/A',
       speed_index: report.audits['speed-index']?.numericValue || 'N/A',
-      time_to_first_byte: report.audits['server-response-time']?.numericValue || 'N/A'
+      time_to_first_byte: report.audits['server-response-time']?.numericValue || 'N/A',
+      render_blocking_resources: report.audits['render-blocking-resources']?.score || 'N/A',
+      lazy_load_images: report.audits['offscreen-images']?.score || 'N/A'
     },
     best_practices: {
       score: report.categories['best-practices']?.score || 'N/A',
@@ -61,6 +69,14 @@ runLighthouse(url).then(report => {
       vulnerabilities: report.audits['no-vulnerable-libraries']?.score || 'N/A',
       csp: report.audits['csp-xss']?.score || 'N/A',
       uses_passive_listeners: report.audits['uses-passive-event-listeners']?.score || 'N/A'
+    },
+    mobile: {
+      score: report.categories['accessibility']?.score || 'N/A', // Avalia a usabilidade em mobile
+      viewport: report.audits['viewport']?.score || 'N/A',
+      mobile_friendly: report.audits['mobile-friendly']?.score || 'N/A',
+      touch_targets: report.audits['tap-targets']?.score || 'N/A',
+      font_legibility: report.audits['font-size']?.score || 'N/A',  // Fontes legíveis para mobile
+      image_aspect_ratio: report.audits['image-aspect-ratio']?.score || 'N/A'  // Imagens com proporção correta
     }
   };
 
