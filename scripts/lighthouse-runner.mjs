@@ -34,26 +34,18 @@ const webhookUrl = process.argv[3];
 
 // Executa o Lighthouse e trata o relatório
 runLighthouse(url).then(report => {
-  const data = {
-    performance: report.categories?.performance?.score || 'N/A',
-    accessibility: report.categories?.accessibility?.score || 'N/A',
-    bestPractices: report.categories?.['best-practices']?.score || 'N/A',
-    seo: report.categories?.seo?.score || 'N/A',
-    pwa: report.categories?.pwa?.score || 'N/A'
-  };
-
-  // Se a URL do webhook foi fornecida, envia o resultado para o Webhook
+  // Se a URL do webhook foi fornecida, envia o resultado completo para o Webhook
   if (webhookUrl) {
-    axios.post(webhookUrl, data)
+    axios.post(webhookUrl, report)
       .then(response => {
-        console.log('Relatório enviado com sucesso:', response.data);
+        console.log('Relatório completo enviado com sucesso:', response.data);
       })
       .catch(error => {
         console.error('Erro ao enviar os dados:', error);
       });
   } else {
-    // Se não houver webhook, imprime o JSON no console
-    console.log(JSON.stringify(data, null, 2));
+    // Se não houver webhook, imprime o relatório completo no console
+    console.log(JSON.stringify(report, null, 2));
   }
 
 }).catch(error => {
