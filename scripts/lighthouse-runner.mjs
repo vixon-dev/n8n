@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import { lighthouse } from 'lighthouse';
+import lighthouse from 'lighthouse';
 import { URL } from 'url';
 import axios from 'axios';
 
