@@ -23,8 +23,8 @@ RUN apk update && \
     git \
     nano
 
-# Instalar Puppeteer, Lighthouse, Axios e URL globalmente
-RUN npm install -g puppeteer \
+# Instalar Puppeteer, Lighthouse, Axios e URL globalmente, sem baixar o Chromium
+RUN PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install -g puppeteer \
     && npm install -g lighthouse \
     && npm install -g axios \
     && npm install -g url
@@ -51,7 +51,7 @@ RUN mkdir -p /data/scripts && \
 # Definir permissões apenas para root e node no diretório /data/scripts
 RUN chown -R root:node /data/scripts && \
     chmod -R 770 /data/scripts
-    
+
 # Permite usar ytdl-core, puppeteer, lighthouse, axios e outras bibliotecas nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
 ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url
