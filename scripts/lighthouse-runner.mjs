@@ -1,13 +1,14 @@
 import puppeteer from 'puppeteer';
-import lighthouse from 'lighthouse';
+import { lighthouse } from 'lighthouse';
 import { URL } from 'url';
 import axios from 'axios';
 
 // Função principal para rodar o Lighthouse
 async function runLighthouse(url) {
   const browser = await puppeteer.launch({
+    executablePath: '/usr/bin/chromium-browser',  // Caminho do Chromium no Alpine Linux
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--remote-debugging-port=9222']
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
   const { lhr } = await lighthouse(url, {
