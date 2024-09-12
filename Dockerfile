@@ -47,7 +47,11 @@ RUN mkdir -p /data/scripts && \
     cp /tmp/n8n/scripts/update-scripts.sh /data/scripts/update-scripts.sh && \
     chmod +x /data/scripts/update-scripts.sh && \
     rm -rf /tmp/n8n
-
+    
+# Definir permissões apenas para root e node no diretório /data/scripts
+RUN chown -R root:node /data/scripts && \
+    chmod -R 770 /data/scripts
+    
 # Permite usar ytdl-core, puppeteer, lighthouse, axios e outras bibliotecas nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
 ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url
