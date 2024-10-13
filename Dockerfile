@@ -49,6 +49,11 @@ RUN mkdir -p /data/scripts && \
 RUN chown -R root:node /data/scripts && \
     chmod -R 770 /data/scripts
 
+# Cria a pasta iset-token no diretório /data e define permissões de escrita para o usuário node
+RUN mkdir -p /data/n8n && \
+    chown node:node /data/n8n && \
+    chmod u+rwx /data/n8n
+
 # Permite usar ytdl-core, puppeteer, lighthouse, axios, iconv-lite e outras bibliotecas nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
 ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url,iconv-lite,jsdom
