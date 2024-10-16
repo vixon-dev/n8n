@@ -26,6 +26,9 @@ RUN apk update && \
 # Instala o Puppeteer, Lighthouse, Axios, Iconv-lite e outros pacotes diretamente no diretório /data
 RUN npm install puppeteer lighthouse axios url iconv-lite jsdom pluralize --prefix /data
 
+# Instalação global do pluralize para garantir que ele seja acessível
+RUN npm install -g pluralize
+
 # Cria um ambiente virtual e ativa-o
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
@@ -44,7 +47,7 @@ RUN mkdir -p /data/scripts && \
     cp /tmp/n8n/scripts/update-scripts.sh /data/scripts/update-scripts.sh && \
     chmod +x /data/scripts/update-scripts.sh && \
     rm -rf /tmp/n8n
-    
+
 # Definir permissões apenas para root e node no diretório /data/scripts
 RUN chown -R root:node /data/scripts && \
     chmod -R 770 /data/scripts
@@ -58,8 +61,8 @@ RUN mkdir -p /data/n8n && \
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
 ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url,iconv-lite,jsdom,pluralize
 
-# Define variáveis de ambiente necessárias para que o Node.js saiba onde encontrar os módulos instalados
-ENV NODE_PATH=/data/node_modules
+# Aqui, garantimos que o caminho /data/node_modules seja incluído no NODE_PATH
+ENV NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules
 
 # Volta para o user node
 USER node
