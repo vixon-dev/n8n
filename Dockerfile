@@ -24,7 +24,7 @@ RUN apk update && \
     nano
 
 # Instala o Puppeteer, Lighthouse, Axios, Iconv-lite e outros pacotes diretamente no diretório /data
-RUN npm install puppeteer lighthouse axios url iconv-lite jsdom --prefix /data
+RUN npm install puppeteer lighthouse axios url iconv-lite jsdom pluralize --prefix /data
 
 # Cria um ambiente virtual e ativa-o
 RUN python3 -m venv /opt/venv
@@ -56,7 +56,7 @@ RUN mkdir -p /data/n8n && \
 
 # Permite usar ytdl-core, puppeteer, lighthouse, axios, iconv-lite e outras bibliotecas nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
-ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url,iconv-lite,jsdom
+ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url,iconv-lite,jsdom,pluralize
 
 # Define variáveis de ambiente necessárias para que o Node.js saiba onde encontrar os módulos instalados
 ENV NODE_PATH=/data/node_modules
