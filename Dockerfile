@@ -57,15 +57,15 @@ RUN mkdir -p /data/n8n && \
     chown node:node /data/n8n && \
     chmod u+rwx /data/n8n
 
-# Permite usar ytdl-core, puppeteer, lighthouse, axios, iconv-lite, axios-cookiejar-support e outras bibliotecas nos Function Nodes
+# Permite usar ytdl-core, puppeteer, lighthouse, axios, iconv-lite e outras bibliotecas nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
 ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url,iconv-lite,jsdom,pluralize,axios-cookiejar-support,tough-cookie
 
-# Configura o NODE_PATH no ambiente global do container
+# Aqui, garantimos que o caminho /data/node_modules seja incluído no NODE_PATH
 ENV NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules
 
 # Volta para o user node
 USER node
 
-# Define o diretório de trabalho
+# Definir o diretório de trabalho
 WORKDIR /data
