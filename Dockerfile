@@ -64,22 +64,11 @@ ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url
 # Aqui, garantimos que o caminho /data/node_modules seja incluído no NODE_PATH
 ENV NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules
 
-# Garantir permissões adequadas no diretório /data antes de criar o script
-RUN mkdir -p /data && \
-    chmod 775 /data && \
-    chown root:node /data
-
-# Injeta o NODE_PATH diretamente no script de inicialização com o shebang
-RUN echo '#!/bin/sh' > /data/start.sh && \
-    echo 'export NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules' >> /data/start.sh && \
-    echo 'exec "$@"' >> /data/start.sh && \
-    chmod +x /data/start.sh
+# Injeta o NODE_PATH no processo do N8N
+ENV N8N_CUSTOM_ENV_VARIABLES="NODE_PATH"
 
 # Volta para o user node
 USER node
 
 # Definir o diretório de trabalho
 WORKDIR /data
-
-# Sobrescreve o ENTRYPOINT para garantir o NODE_PATH
-ENTRYPOINT ["/data/start.sh", "n8n"]
