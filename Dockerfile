@@ -69,8 +69,9 @@ RUN mkdir -p /data && \
     chmod 775 /data && \
     chown root:node /data
 
-# Injeta o NODE_PATH diretamente no script de inicialização
-RUN echo 'export NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules' > /data/start.sh && \
+# Injeta o NODE_PATH diretamente no script de inicialização com o shebang
+RUN echo '#!/bin/sh' > /data/start.sh && \
+    echo 'export NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules' >> /data/start.sh && \
     echo 'exec "$@"' >> /data/start.sh && \
     chmod +x /data/start.sh
 
