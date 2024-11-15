@@ -61,14 +61,11 @@ RUN mkdir -p /data/n8n && \
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
 ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url,iconv-lite,jsdom,pluralize,axios-cookiejar-support,tough-cookie
 
-# Aqui, garantimos que o caminho /data/node_modules seja incluído no NODE_PATH
-ENV NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules
-
-# Injeta o NODE_PATH no processo do N8N
-ENV N8N_CUSTOM_ENV_VARIABLES="NODE_PATH"
+# Modifica o ambiente do container durante o build para garantir o NODE_PATH
+RUN echo "export NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules" >> /etc/profile
 
 # Volta para o user node
 USER node
 
-# Definir o diretório de trabalho
+# Define o diretório de trabalho
 WORKDIR /data
