@@ -70,5 +70,10 @@ USER node
 # Definir o diretório de trabalho
 WORKDIR /data
 
-# Define o entrypoint para garantir o NODE_PATH no tempo de execução
-ENTRYPOINT ["sh", "-c", "export NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules && n8n"]
+# Injeta o NODE_PATH diretamente no script de inicialização
+RUN echo 'export NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules' >> /data/start.sh && \
+    echo 'exec "$@"' >> /data/start.sh && \
+    chmod +x /data/start.sh
+
+# Sobrescreve o ENTRYPOINT para garantir o NODE_PATH
+ENTRYPOINT ["/data/start.sh", "n8n"]
