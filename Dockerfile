@@ -57,7 +57,7 @@ RUN mkdir -p /data/n8n && \
     chown node:node /data/n8n && \
     chmod u+rwx /data/n8n
 
-# Permite usar ytdl-core, puppeteer, lighthouse, axios, iconv-lite e outras bibliotecas nos Function Nodes
+# Permite usar ytdl-core, puppeteer, lighthouse, axios, iconv-lite, axios-cookiejar-support e outras bibliotecas nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
 ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url,iconv-lite,jsdom,pluralize,axios-cookiejar-support,tough-cookie
 
