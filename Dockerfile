@@ -69,3 +69,6 @@ USER node
 
 # Definir o diretório de trabalho
 WORKDIR /data
+
+# Define o entrypoint para garantir o NODE_PATH no tempo de execução
+ENTRYPOINT ["sh", "-c", "export NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules && n8n"]
