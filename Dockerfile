@@ -1,3 +1,4 @@
+# Latest Version: 1.75.2
 # Usar a imagem oficial do n8n como base com a tag `latest`
 FROM n8nio/n8n:next
 
