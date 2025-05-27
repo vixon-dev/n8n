@@ -1,4 +1,4 @@
-# Latest Version: 1.93.0
+# Latest Version: 1.94.1
 # Usar a imagem oficial do n8n como base com a tag `latest`
 FROM n8nio/n8n:latest
 
