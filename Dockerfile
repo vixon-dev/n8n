@@ -1,6 +1,6 @@
-# Latest Version: 1.108.2
+# Latest Version: 1.107.3
 # Usar a imagem oficial do n8n como base com a tag `latest`
-FROM n8nio/n8n:latest
+FROM n8nio/n8n:1.107.3
 
 # Altera para root para instalar as dependências
 USER root
