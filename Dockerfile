@@ -1,4 +1,4 @@
-# Latest Version: 1.111.0 (h)
+# Latest Version: 1.111.0 (i)
 FROM n8nio/n8n:1.111.0
 
 # Altera para root para instalar as dependências
@@ -26,7 +26,7 @@ RUN apk update && \
 
 # Instala pacotes diretamente no diretório /data (para Function Nodes normais)
 RUN npm install puppeteer lighthouse axios url iconv-lite jsdom pluralize \
-    axios-cookiejar-support tough-cookie imap mailparser http-cookie-agent@6.0.0 \
+    axios-cookiejar-support tough-cookie imap mailparser http-cookie-agent@5.0.3 \
     --prefix /data
 
 # Instala pacotes globalmente (para Task Runners não darem MODULE_NOT_FOUND)
