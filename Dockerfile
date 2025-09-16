@@ -1,5 +1,4 @@
 # Latest Version: 1.111.0
-# Usar a imagem oficial do n8n como base com a tag `latest`
 FROM n8nio/n8n:1.111.0
 
 # Altera para root para instalar as dependências
@@ -30,18 +29,19 @@ RUN npm install puppeteer lighthouse axios url iconv-lite jsdom pluralize axios-
 # Instalação global do pluralize para garantir que ele seja acessível
 RUN npm install -g pluralize
 
-# Cria um ambiente virtual e ativa-o
+# Cria um ambiente virtual Python e ativa-o
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Instala a versão mais recente do yt-dlp dentro do ambiente virtual
+# Instala a versão mais recente do yt-dlp dentro do ambiente virtual (Python)
 RUN pip install -U "yt-dlp[default]"
 
-# Instala a versão mais recente do ytdl-core
+# Instala a versão mais recente do ytdl-core (Node.js)
 RUN npm install -g ytdl-core@latest
 RUN npm install youtube-transcript --prefix /data
-# Instala o yt-dlp como módulo Node.js (além do binário via pip)
-RUN npm install -g yt-dlp
+
+# Instala wrapper Node.js para o yt-dlp (aponta para o binário Python)
+RUN npm install -g yt-dlp-exec
 
 # Baixa os scripts lighthouse-runner.mjs e update-scripts.sh do GitHub e salva em /data/scripts/
 RUN mkdir -p /data/scripts && \
@@ -60,9 +60,9 @@ RUN mkdir -p /data/n8n && \
     chown node:node /data/n8n && \
     chmod u+rwx /data/n8n
 
-# Permite usar ytdl-core, puppeteer, lighthouse, axios, iconv-lite, imap, mailparser e outras bibliotecas nos Function Nodes
+# Permite usar libs nos Function Nodes
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
-ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url,iconv-lite,jsdom,pluralize,axios-cookiejar-support,tough-cookie,imap,mailparser
+ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp-exec,puppeteer,lighthouse,axios,url,iconv-lite,jsdom,pluralize,axios-cookiejar-support,tough-cookie,imap,mailparser
 
 # Aqui, garantimos que o caminho /data/node_modules seja incluído no NODE_PATH
 ENV NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules
