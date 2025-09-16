@@ -1,4 +1,4 @@
-# Latest Version: 1.111.0 (b)
+# Latest Version: 1.111.0 (c)
 FROM n8nio/n8n:1.111.0
 
 # Altera para root para instalar as dependências
@@ -24,10 +24,13 @@ RUN apk update && \
     nano \
     bash
 
-# Instala o Puppeteer, Lighthouse, Axios, Iconv-lite, axios-cookiejar-support, tough-cookie e outros pacotes diretamente no diretório /data
+# Instala pacotes diretamente no diretório /data (para Function Nodes normais)
 RUN npm install puppeteer lighthouse axios url iconv-lite jsdom pluralize axios-cookiejar-support tough-cookie imap mailparser --prefix /data
 
-# Instalação global do pluralize para garantir que ele seja acessível
+# Instala os mesmos pacotes globalmente (para Task Runners não darem MODULE_NOT_FOUND)
+RUN npm install -g puppeteer lighthouse axios iconv-lite jsdom pluralize axios-cookiejar-support tough-cookie imap mailparser
+
+# Instalação global do pluralize (redundante, mas seguro)
 RUN npm install -g pluralize
 
 # Cria um ambiente virtual Python e ativa-o
@@ -63,11 +66,11 @@ RUN mkdir -p /data/n8n && \
     chown node:node /data/n8n && \
     chmod u+rwx /data/n8n
 
-# Permite usar libs nos Function Nodes
+# Permite usar libs nos Function Nodes (main e runners)
 ENV NODE_FUNCTION_ALLOW_BUILTIN=*
 ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp-exec,yt-dlp-wrap,puppeteer,lighthouse,axios,url,iconv-lite,jsdom,pluralize,axios-cookiejar-support,tough-cookie,imap,mailparser
 
-# Aqui, garantimos que o caminho /data/node_modules seja incluído no NODE_PATH
+# Aqui, garantimos que o caminho /data/node_modules e global estejam no NODE_PATH
 ENV NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules
 
 # Volta para o user node
