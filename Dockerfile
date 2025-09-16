@@ -1,4 +1,4 @@
-# Version: 1.111.0 (l)
+# Version: 1.111.0 (m)
 FROM n8nio/n8n:1.111.0
 
 ###############################
@@ -97,8 +97,3 @@ ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
 ###############################
 USER node
 WORKDIR /data
-
-###############################
-# 9. Entrypoint
-###############################
-CMD ["n8n"]
