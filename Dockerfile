@@ -1,4 +1,4 @@
-# Latest Version: 1.111.0 (d)
+# Latest Version: 1.111.0 (e)
 FROM n8nio/n8n:1.111.0
 
 # Altera para root para instalar as dependências
@@ -45,7 +45,7 @@ RUN pip install -U "yt-dlp[default]"
 
 # Instala a versão mais recente do ytdl-core (Node.js)
 RUN npm install -g ytdl-core@latest
-RUN npm install youtube-transcript --prefix /data
+RUN npm install youtube-transcript@1.0.6 --prefix /data
 
 # Instala yt-dlp-wrap e cria um alias para funcionar como yt-dlp-exec
 RUN npm install -g yt-dlp-wrap && \
