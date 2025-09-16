@@ -1,4 +1,4 @@
-# Latest Version: 1.111.0
+# Latest Version: 1.111.0 (b)
 FROM n8nio/n8n:1.111.0
 
 # Altera para root para instalar as dependências
