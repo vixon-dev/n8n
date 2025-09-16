@@ -1,6 +1,6 @@
-# Latest Version: 1.110.1
+# Latest Version: 1.111.0
 # Usar a imagem oficial do n8n como base com a tag `latest`
-FROM n8nio/n8n:1.110.1
+FROM n8nio/n8n:1.111.0
 
 # Altera para root para instalar as dependências
 USER root
@@ -40,6 +40,8 @@ RUN pip install -U "yt-dlp[default]"
 # Instala a versão mais recente do ytdl-core
 RUN npm install -g ytdl-core@latest
 RUN npm install youtube-transcript --prefix /data
+# Instala o yt-dlp como módulo Node.js (além do binário via pip)
+RUN npm install -g yt-dlp
 
 # Baixa os scripts lighthouse-runner.mjs e update-scripts.sh do GitHub e salva em /data/scripts/
 RUN mkdir -p /data/scripts && \
