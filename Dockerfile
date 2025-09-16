@@ -41,8 +41,8 @@ RUN pip install -U "yt-dlp[default]"
 RUN npm install -g ytdl-core@latest
 RUN npm install youtube-transcript --prefix /data
 
-# Instala wrapper Node.js para o yt-dlp (em /data, não global)
-RUN npm install yt-dlp-exec --prefix /data
+# Instala wrapper Node.js para o yt-dlp (global para funcionar no runner)
+RUN npm install -g yt-dlp-exec
 
 # Baixa os scripts lighthouse-runner.mjs e update-scripts.sh do GitHub e salva em /data/scripts/
 RUN mkdir -p /data/scripts && \
