@@ -1,15 +1,12 @@
-# Version: 1.111.0 (m)
+# Latest Version: 1.111.0
 FROM n8nio/n8n:1.111.0
 
-###############################
-# 1. Permissões root
-###############################
+# Altera para root para instalar as dependências
 USER root
 
-###############################
-# 2. Dependências do sistema
-###############################
-RUN apk update && apk add --no-cache \
+# Atualiza os índices dos pacotes e instala FFMPEG, PHP, Python e dependências do Chromium
+RUN apk update && \
+    apk add --no-cache \
     ffmpeg \
     php \
     python3 \
@@ -24,76 +21,51 @@ RUN apk update && apk add --no-cache \
     font-noto \
     font-noto-cjk \
     git \
-    nano \
-    bash \
-    libc6-compat \
-    sqlite \
- && ln -sf /usr/bin/chromium /usr/bin/chromium-browser
+    nano
 
-###############################
-# 3. Python / yt-dlp
-###############################
+# Instala o Puppeteer, Lighthouse, Axios, Iconv-lite, axios-cookiejar-support, tough-cookie e outros pacotes diretamente no diretório /data
+RUN npm install puppeteer lighthouse axios url iconv-lite jsdom pluralize axios-cookiejar-support tough-cookie imap mailparser --prefix /data
+
+# Instalação global do pluralize para garantir que ele seja acessível
+RUN npm install -g pluralize
+
+# Cria um ambiente virtual e ativa-o
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
+
+# Instala a versão mais recente do yt-dlp dentro do ambiente virtual
 RUN pip install -U "yt-dlp[default]"
 
-###############################
-# 4. Variáveis de versão
-###############################
-ARG PUPPETEER_VERSION=22.15.0
-ARG LIGHTHOUSE_VERSION=12.1.0
-ARG AXIOS_VERSION=1.7.7
-ARG ICONV_VERSION=0.6.3
-ARG JSDOM_VERSION=22.1.0
-ARG PLURALIZE_VERSION=8.0.0
-ARG TOUGH_COOKIE_VERSION=4.1.4
-ARG IMAP_VERSION=0.8.19
-ARG MAILPARSER_VERSION=3.7.1
-ARG COOKIE_AGENT_VERSION=5.0.3
+# Instala a versão mais recente do ytdl-core
+RUN npm install -g ytdl-core@latest
+RUN npm install youtube-transcript --prefix /data
 
-###############################
-# 5. Instalação libs Node.js
-###############################
-RUN npm install \
-    puppeteer@${PUPPETEER_VERSION} \
-    lighthouse@${LIGHTHOUSE_VERSION} \
-    axios@${AXIOS_VERSION} \
-    iconv-lite@${ICONV_VERSION} \
-    jsdom@${JSDOM_VERSION} \
-    pluralize@${PLURALIZE_VERSION} \
-    axios-cookiejar-support@6.0.4 \
-    tough-cookie@${TOUGH_COOKIE_VERSION} \
-    imap@${IMAP_VERSION} \
-    mailparser@${MAILPARSER_VERSION} \
-    http-cookie-agent@${COOKIE_AGENT_VERSION} \
-    --prefix /data --legacy-peer-deps
+# Baixa os scripts lighthouse-runner.mjs e update-scripts.sh do GitHub e salva em /data/scripts/
+RUN mkdir -p /data/scripts && \
+    git clone https://github.com/vixon-dev/n8n.git /tmp/n8n && \
+    cp /tmp/n8n/scripts/lighthouse-runner.mjs /data/scripts/lighthouse-runner.mjs && \
+    cp /tmp/n8n/scripts/update-scripts.sh /data/scripts/update-scripts.sh && \
+    chmod +x /data/scripts/update-scripts.sh && \
+    rm -rf /tmp/n8n
 
-RUN npm install -g \
-    puppeteer@${PUPPETEER_VERSION} \
-    lighthouse@${LIGHTHOUSE_VERSION} \
-    axios@${AXIOS_VERSION} \
-    iconv-lite@${ICONV_VERSION} \
-    jsdom@${JSDOM_VERSION} \
-    pluralize@${PLURALIZE_VERSION} \
-    axios-cookiejar-support@6.0.4 \
-    tough-cookie@${TOUGH_COOKIE_VERSION} \
-    imap@${IMAP_VERSION} \
-    mailparser@${MAILPARSER_VERSION} \
-    http-cookie-agent@${COOKIE_AGENT_VERSION} \
-    --legacy-peer-deps
+# Definir permissões apenas para root e node no diretório /data/scripts
+RUN chown -R root:node /data/scripts && \
+    chmod -R 770 /data/scripts
 
-###############################
-# 6. Extras multimídia
-###############################
-RUN npm install -g ytdl-core@latest youtube-transcript-api
+# Cria a pasta iset-token no diretório /data e define permissões de escrita para o usuário node
+RUN mkdir -p /data/n8n && \
+    chown node:node /data/n8n && \
+    chmod u+rwx /data/n8n
 
-###############################
-# 7. Segurança + Config
-###############################
-ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+# Permite usar ytdl-core, puppeteer, lighthouse, axios, iconv-lite, imap, mailparser e outras bibliotecas nos Function Nodes
+ENV NODE_FUNCTION_ALLOW_BUILTIN=*
+ENV NODE_FUNCTION_ALLOW_EXTERNAL=ytdl-core,yt-dlp,puppeteer,lighthouse,axios,url,iconv-lite,jsdom,pluralize,axios-cookiejar-support,tough-cookie,imap,mailparser
 
-###############################
-# 8. Volta para usuário padrão
-###############################
+# Aqui, garantimos que o caminho /data/node_modules seja incluído no NODE_PATH
+ENV NODE_PATH=/data/node_modules:/usr/local/lib/node_modules:/usr/local/lib/node_modules/n8n/dist/node_modules:/usr/local/lib/node_modules/n8n/node_modules:/usr/local/lib/node_modules:/usr/local/node_modules:/usr/node_modules:/node_modules
+
+# Volta para o user node
 USER node
+
+# Definir o diretório de trabalho
 WORKDIR /data
