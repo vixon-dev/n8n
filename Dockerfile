@@ -1,5 +1,5 @@
-# Latest Version: 1.111.0 FS FIX
-FROM n8nio/n8n:1.111.0
+# Latest Version: 1.112.4
+FROM n8nio/n8n:1.112.4
 
 # Altera para root para instalar as dependências
 USER root
