@@ -1,5 +1,5 @@
 # Latest Version: 1.112.4
-FROM n8nio/n8n:1.112.4
+FROM n8nio/n8n:1.114.4
 
 # Altera para root para instalar as dependências
 USER root
@@ -25,6 +25,8 @@ RUN apk update && \
 
 # Instala o Puppeteer, Lighthouse, Axios, Iconv-lite, axios-cookiejar-support, tough-cookie e outros pacotes diretamente no diretório /data
 RUN npm install puppeteer lighthouse axios url iconv-lite jsdom pluralize axios-cookiejar-support tough-cookie imap mailparser --prefix /data
+# Cria um link simbólico para que o Node encontre os módulos do /data
+RUN ln -s /data/node_modules /usr/local/lib/node_modules
 
 # Instalação global do pluralize para garantir que ele seja acessível
 RUN npm install -g pluralize
