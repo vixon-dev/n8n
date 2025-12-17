@@ -1,4 +1,4 @@
-FROM n8nio/n8n:1.115.3
+FROM n8nio/n8n:1.123.5
 
 # Altera para root para instalar as dependências
 USER root
